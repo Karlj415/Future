@@ -50,8 +50,8 @@ const OverlayText = () => {
   return (
     <div className='absolute inset-0 flex items-center justify-center pointer-events-none z-10'>
       <h1 className='text-[clamp(4rem,15vw,20rem)] font-bold text-white mix-blend-difference leading-none tracking-tighter text-center'>
-        DESIGN /<br />
-        FUTURE
+        HUMAN CODE /<br />
+        AGAINST AI
       </h1>
     </div>
   );

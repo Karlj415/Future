@@ -32,9 +32,9 @@ function App() {
           <main className='w-full min-h-screen bg-[#050505] text-white'>
             <Navigation />
             <Hero />
-            <KineticText text='HUMAN WORKS → 2025 → ' />
+            <KineticText text='HUMAN CODERS → DEFY AI → ' />
             <WorkGallery />
-            <KineticText text='CREATIVE CODING → BY KARL → ' />
+            <KineticText text='WE WRITE THE CODE → NOT THE MACHINES → ' />
             <Playground />
             <About />
             <Contact />
