@@ -21,7 +21,6 @@ function App() {
       {loading && (
         <Preloader
           onComplete={() => {
-            console.log('App: Preloader completed, setting loading to false');
             setLoading(false);
           }}
         />
@@ -29,7 +28,7 @@ function App() {
 
       {!loading && (
         <SmoothScroll>
-          <main className='w-full min-h-screen bg-[#050505] text-white'>
+          <main className='relative w-full min-h-screen bg-[#050505] text-white'>
             <Navigation />
             <Hero />
             <KineticText text='CODE BY KARL → DEFY AI → ' />

@@ -47,7 +47,7 @@ const KineticText = ({ text }) => {
   });
 
   return (
-    <div ref={sectionRef} className='w-full overflow-hidden py-32'>
+    <div ref={sectionRef} className='relative w-full overflow-hidden py-32'>
       <motion.div style={marqueeStyle} className={`whitespace-nowrap flex w-max ${shouldReduceMotion ? '' : 'will-change-transform'}`}>
         {Array.from({ length: 8 }).map((_, i) => (
           <motion.h2 key={i} {...textAnimationProps} className='text-[clamp(4rem,15vw,20rem)] font-bold uppercase leading-none tracking-tighter mr-12'>

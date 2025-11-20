@@ -85,26 +85,26 @@ const ProjectItem = ({ title, category, image, index, color }) => {
 const WorkGallery = () => {
   const projects = [
     {
-      title: 'NEBULA',
-      category: 'Immersive Experience',
+      title: 'THREE.JS',
+      category: '3D Experience',
       image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=60&w=1200&auto=format&fit=crop',
       color: '#8b5cf6', // Violet
     },
     {
-      title: 'VOID',
-      category: 'Digital Product',
+      title: 'REACT',
+      category: 'Core Framework',
       image: 'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=60&w=1200&auto=format&fit=crop',
       color: '#3b82f6', // Blue
     },
     {
-      title: 'ECHO',
-      category: 'Sound Design',
+      title: 'FRAMER',
+      category: 'Animation Library',
       image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=60&w=1200&auto=format&fit=crop',
       color: '#10b981', // Emerald
     },
     {
-      title: 'FLUX',
-      category: 'Motion Graphics',
+      title: 'TAILWIND',
+      category: 'Styling System',
       image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=60&w=1200&auto=format&fit=crop',
       color: '#f43f5e', // Rose
     },
@@ -145,25 +145,8 @@ const OptimizedImage = ({ base, title, priority = false }) => {
   const lowSrc = buildUrl(base, 32);
   return (
     <div className='absolute inset-0'>
-      <img
-        className={`absolute inset-0 w-full h-full object-cover scale-[1.05] blur-xl transition-opacity duration-500 ${loaded ? 'opacity-0' : 'opacity-100'}`}
-        loading='eager'
-        decoding='async'
-        src={lowSrc}
-        alt=''
-        aria-hidden='true'
-      />
-      <img
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-        loading={priority ? 'eager' : 'lazy'}
-        fetchpriority={priority ? 'high' : 'low'}
-        decoding='async'
-        src={src}
-        srcSet={srcSet}
-        sizes={sizes}
-        alt={title}
-        onLoad={() => setLoaded(true)}
-      />
+      <img className={`absolute inset-0 w-full h-full object-cover scale-[1.05] blur-xl transition-opacity duration-500 ${loaded ? 'opacity-0' : 'opacity-100'}`} loading='eager' decoding='async' src={lowSrc} alt='' aria-hidden='true' />
+      <img className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : 'low'} decoding='async' src={src} srcSet={srcSet} sizes={sizes} alt={title} onLoad={() => setLoaded(true)} />
     </div>
   );
 };

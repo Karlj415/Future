@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 
 const Preloader = ({ onComplete }) => {
   const [count, setCount] = useState(0);
-  const [text, setText] = useState("");
-  const fullText = "HUMAN";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+  const [text, setText] = useState('');
+  const fullText = 'HUMAN';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
 
   useEffect(() => {
     let mounted = true;
@@ -15,34 +15,33 @@ const Preloader = ({ onComplete }) => {
       for (let i = 0; i <= 100; i++) {
         if (!mounted) return;
         setCount(i);
-        await new Promise(r => setTimeout(r, 20));
+        await new Promise((r) => setTimeout(r, 20));
       }
 
       // 2. Scramble text reveal
       let iteration = 0;
       while (iteration <= fullText.length) {
         if (!mounted) return;
-        
+
         setText(
           fullText
-            .split("")
+            .split('')
             .map((letter, index) => {
               if (index < iteration) {
                 return fullText[index];
               }
               return characters[Math.floor(Math.random() * characters.length)];
             })
-            .join("")
+            .join('')
         );
-        
+
         iteration += 1 / 3;
-        await new Promise(r => setTimeout(r, 30));
+        await new Promise((r) => setTimeout(r, 30));
       }
 
       // 3. Wait a bit then complete
       if (mounted) {
         setTimeout(() => {
-          console.log("Preloader: Calling onComplete");
           if (mounted) onComplete();
         }, 500);
       }
@@ -51,22 +50,14 @@ const Preloader = ({ onComplete }) => {
     runSequence();
 
     return () => {
-      console.log("Preloader: Unmounting");
       mounted = false;
     };
   }, [onComplete]);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black text-white"
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-    >
-      <div className="text-center">
-        <div className="text-[10vw] font-bold tracking-tighter font-mono">
-          {count < 100 ? count.toString().padStart(3, '0') : text}
-        </div>
+    <motion.div className='fixed inset-0 z-[100] flex items-center justify-center bg-black text-white' initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.5, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: 'easeInOut' }}>
+      <div className='text-center'>
+        <div className='text-[10vw] font-bold tracking-tighter font-mono'>{count < 100 ? count.toString().padStart(3, '0') : text}</div>
       </div>
     </motion.div>
   );
