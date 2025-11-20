@@ -1,15 +1,5 @@
 import { useRef } from 'react';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useVelocity,
-  useAnimationFrame,
-  useMotionValue,
-  useInView,
-  useReducedMotion,
-} from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useVelocity, useAnimationFrame, useMotionValue, useInView, useReducedMotion } from 'framer-motion';
 
 const KineticText = ({ text }) => {
   const baseX = useMotionValue(0);
@@ -22,7 +12,7 @@ const KineticText = ({ text }) => {
     damping: 50,
     stiffness: 400,
   });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 2.5], {
+  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 1], {
     clamp: false,
   });
 
@@ -30,7 +20,7 @@ const KineticText = ({ text }) => {
 
   // Infinite scroll logic
   // We repeat the text 8 times. 100% / 8 = 12.5%
-  const x = useTransform(baseX, v => `${v % 12.5}%`);
+  const x = useTransform(baseX, (v) => `${v % 12.5}%`);
 
   const marqueeStyle = shouldReduceMotion ? undefined : { x, skewX };
   const textAnimationProps = shouldReduceMotion
@@ -45,7 +35,7 @@ const KineticText = ({ text }) => {
   useAnimationFrame((t, delta) => {
     if (!isInView || shouldReduceMotion) return;
 
-    let moveBy = -1 * (delta / 1000); // Base speed moving left
+    let moveBy = -0.5 * (delta / 1000); // Base speed moving left
 
     // Add scroll velocity effect
     const velocity = velocityFactor.get();
@@ -58,16 +48,9 @@ const KineticText = ({ text }) => {
 
   return (
     <div ref={sectionRef} className='w-full overflow-hidden py-32'>
-      <motion.div
-        style={marqueeStyle}
-        className={`whitespace-nowrap flex w-max ${shouldReduceMotion ? '' : 'will-change-transform'}`}
-      >
+      <motion.div style={marqueeStyle} className={`whitespace-nowrap flex w-max ${shouldReduceMotion ? '' : 'will-change-transform'}`}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <motion.h2
-            key={i}
-            {...textAnimationProps}
-            className='text-[clamp(4rem,15vw,20rem)] font-bold uppercase leading-none tracking-tighter mr-12'
-          >
+          <motion.h2 key={i} {...textAnimationProps} className='text-[clamp(4rem,15vw,20rem)] font-bold uppercase leading-none tracking-tighter mr-12'>
             {text}
           </motion.h2>
         ))}
