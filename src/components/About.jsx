@@ -11,7 +11,7 @@ const About = () => {
           viewport={{ once: true }}
           className='text-[5vw] font-bold uppercase leading-none tracking-tighter mb-12'
         >
-          HUMAN SIGNAL // AGAINST THE MACHINE
+          FIGHT GAINST THE MACHINE
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 30 }}

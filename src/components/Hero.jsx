@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Text } from '@react-three/drei';
 import * as THREE from 'three';
@@ -51,16 +51,29 @@ const OverlayText = () => {
     <div className='absolute inset-0 flex items-center justify-center pointer-events-none z-10'>
       <h1 className='text-[clamp(4rem,15vw,20rem)] font-bold text-white mix-blend-difference leading-none tracking-tighter text-center'>
         HUMAN CODE /<br />
-        AGAINST AI
+        NOT AI
       </h1>
     </div>
   );
 };
 
 const Hero = () => {
+  const ref = useRef(null);
+  const [isInView, setIsInView] = useState(true);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className='relative w-full h-screen bg-[#050505]'>
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+    <div ref={ref} className='relative w-full h-screen bg-[#050505]'>
+      <Canvas frameloop={isInView ? 'always' : 'never'} camera={{ position: [0, 0, 5], fov: 45 }}>
         <color attach='background' args={['#050505']} />
         <NoiseBackground />
         <ambientLight intensity={0.5} />

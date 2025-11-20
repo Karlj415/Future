@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const Preloader = ({ onComplete }) => {
   const [count, setCount] = useState(0);
   const [text, setText] = useState("");
-  const fullText = "AETHER";
+  const fullText = "HUMAN";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
 
   useEffect(() => {
