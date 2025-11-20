@@ -15,7 +15,6 @@ const CustomCursor = () => {
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') {
-      setIsVisible(false);
       return undefined;
     }
 

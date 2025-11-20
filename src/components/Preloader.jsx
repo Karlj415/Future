@@ -54,7 +54,7 @@ const Preloader = ({ onComplete }) => {
       console.log("Preloader: Unmounting");
       mounted = false;
     };
-  }, []); // Empty dependency array, run once on mount
+  }, [onComplete]);
 
   return (
     <motion.div

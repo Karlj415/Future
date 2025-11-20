@@ -14,13 +14,13 @@ const ProjectItem = ({ title, category, image, index, color }) => {
   const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
   const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
 
-  const rotateX = enableFancy ? useTransform(mouseY, [-0.5, 0.5], ['15deg', '-15deg']) : '0deg';
-  const rotateY = enableFancy ? useTransform(mouseX, [-0.5, 0.5], ['-15deg', '15deg']) : '0deg';
+  const rotateXRaw = useTransform(mouseY, [-0.5, 0.5], ['15deg', '-15deg']);
+  const rotateYRaw = useTransform(mouseX, [-0.5, 0.5], ['-15deg', '15deg']);
 
   // Dynamic Spotlight
-  const spotlightX = enableFancy ? useTransform(mouseX, [-0.5, 0.5], ['0%', '100%']) : null;
-  const spotlightY = enableFancy ? useTransform(mouseY, [-0.5, 0.5], ['0%', '100%']) : null;
-  const spotlight = enableFancy ? useMotionTemplate`radial-gradient(600px circle at ${spotlightX} ${spotlightY}, rgba(255,255,255,0.15), transparent 80%)` : undefined;
+  const spotlightXRaw = useTransform(mouseX, [-0.5, 0.5], ['0%', '100%']);
+  const spotlightYRaw = useTransform(mouseY, [-0.5, 0.5], ['0%', '100%']);
+  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${spotlightXRaw} ${spotlightYRaw}, rgba(255,255,255,0.15), transparent 80%)`;
 
   const handleMouseMove = (e) => {
     if (!enableFancy) return;
@@ -46,18 +46,16 @@ const ProjectItem = ({ title, category, image, index, color }) => {
   });
 
   // Parallax effect for text
-  const parallaxY = prefersReducedMotion
-    ? 0
-    : useSpring(useTransform(scrollYProgress, [0, 1], [100, -100]), {
-        stiffness: 120,
-        damping: 18,
-        mass: 0.4,
-      });
+  const parallaxYRaw = useSpring(useTransform(scrollYProgress, [0, 1], [100, -100]), {
+    stiffness: 120,
+    damping: 18,
+    mass: 0.4,
+  });
   const baseDelay = index * 0.08;
 
   return (
     <motion.div ref={ref} className='relative w-full h-[75vh] sm:h-[80vh] mb-24 sm:mb-32 flex items-center justify-center perspective-[1200px]' initial={{ opacity: 0, scale: 0.9, y: 80 }} animate={isInView ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 60 }} transition={{ duration: prefersReducedMotion ? 0.3 : 0.9, delay: baseDelay, ease: [0.22, 1, 0.36, 1] }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ perspective: 1000, contentVisibility: 'auto', containIntrinsicSize: '80vh' }}>
-      <motion.div className='relative w-[88%] sm:w-[80%] h-full group preserve-3d' style={{ rotateX, rotateY, transformStyle: 'preserve-3d', willChange: enableFancy ? 'transform' : 'auto' }}>
+      <motion.div className='relative w-[88%] sm:w-[80%] h-full group preserve-3d' style={{ rotateX: enableFancy ? rotateXRaw : '0deg', rotateY: enableFancy ? rotateYRaw : '0deg', transformStyle: 'preserve-3d', willChange: enableFancy ? 'transform' : 'auto' }}>
         {/* Glow behind */}
         {enableFancy && <div className='absolute -inset-6 rounded-[36px] opacity-0 blur-3xl transition-all duration-[1200ms] group-hover:opacity-60' style={{ background: `radial-gradient(circle at center, ${color}, transparent 70%)` }} />}
 
@@ -72,7 +70,7 @@ const ProjectItem = ({ title, category, image, index, color }) => {
         </motion.div>
       </motion.div>
 
-      <motion.div style={{ y: parallaxY, z: 60 }} className='absolute z-20 pointer-events-none text-white text-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]'>
+      <motion.div style={{ y: prefersReducedMotion ? 0 : parallaxYRaw, z: 60 }} className='absolute z-20 pointer-events-none text-white text-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]'>
         <motion.h3 initial={{ opacity: 0, scale: 0.95 }} animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }} transition={{ duration: prefersReducedMotion ? 0.3 : 0.9, delay: baseDelay + 0.2, ease: [0.22, 1, 0.36, 1] }} className='text-[8vw] font-black leading-none tracking-tight' style={{ textShadow: `0 0 20px ${color}` }}>
           {title}
         </motion.h3>
@@ -140,10 +138,34 @@ const buildUrl = (base, w) => {
 };
 
 const OptimizedImage = ({ base, title, priority = false }) => {
+  const [loaded, setLoaded] = useState(false);
   const src = buildUrl(base, 768);
   const srcSet = widths.map((w) => `${buildUrl(base, w)} ${w}w`).join(', ');
   const sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 80vw';
-  return <img className='absolute inset-0 w-full h-full object-cover will-change-auto' loading={priority ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : 'low'} decoding='async' src={src} srcSet={srcSet} sizes={sizes} alt={title} />;
+  const lowSrc = buildUrl(base, 32);
+  return (
+    <div className='absolute inset-0'>
+      <img
+        className={`absolute inset-0 w-full h-full object-cover scale-[1.05] blur-xl transition-opacity duration-500 ${loaded ? 'opacity-0' : 'opacity-100'}`}
+        loading='eager'
+        decoding='async'
+        src={lowSrc}
+        alt=''
+        aria-hidden='true'
+      />
+      <img
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : 'low'}
+        decoding='async'
+        src={src}
+        srcSet={srcSet}
+        sizes={sizes}
+        alt={title}
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
+  );
 };
 
 // Lightweight hook to detect coarse pointers (touch devices) for adaptive effects

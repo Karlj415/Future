@@ -21,6 +21,7 @@ const MagneticButton = ({ children, className = "" }) => {
 
   return (
     <motion.div
+      className={className}
       style={{ position: "relative" }}
       ref={ref}
       onMouseMove={handleMouse}
