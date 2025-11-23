@@ -31,9 +31,8 @@ function App() {
           <main className='relative w-full min-h-screen bg-[#050505] text-white'>
             <Navigation />
             <Hero />
-            <KineticText text='CODE BY KARL → DEFY AI → ' />
             <WorkGallery />
-            <KineticText text='WE WRITE THE CODE → NOT THE MACHINES → ' />
+            <KineticText text={'WE WRITE THE CODE\nNOT THE MACHINES'} />
             <Playground />
             <About />
             <Contact />

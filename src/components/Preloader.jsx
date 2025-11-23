@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const Preloader = ({ onComplete }) => {
   const [count, setCount] = useState(0);
   const [text, setText] = useState('');
-  const fullText = 'HUMAN';
+  const fullText = 'CODE BY KARL';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Preloader = ({ onComplete }) => {
   return (
     <motion.div className='fixed inset-0 z-[100] flex items-center justify-center bg-black text-white' initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.5, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: 'easeInOut' }}>
       <div className='text-center'>
-        <div className='text-[10vw] font-bold tracking-tighter font-mono'>{count < 100 ? count.toString().padStart(3, '0') : text}</div>
+        <div className='text-[10vw] font-light tracking-tighter font-sans'>{count < 100 ? count.toString().padStart(3, '0') : text}</div>
       </div>
     </motion.div>
   );

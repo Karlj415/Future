@@ -1,59 +1,108 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useVelocity, useAnimationFrame, useMotionValue, useInView, useReducedMotion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
 
 const KineticText = ({ text }) => {
-  const baseX = useMotionValue(0);
-  const sectionRef = useRef(null);
-  const shouldReduceMotion = useReducedMotion();
-  const isInView = useInView(sectionRef, { amount: 0.2 });
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
-  });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 1], {
-    clamp: false,
-  });
+  const [displayText, setDisplayText] = useState(text);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
 
-  const skewX = useTransform(smoothVelocity, [-1000, 1000], [-30, 30]);
+  // Mouse tracking for spotlight
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  // Smooth spring animation for the glow
+  const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
+  const glowX = useSpring(mouseX, springConfig);
+  const glowY = useSpring(mouseY, springConfig);
 
-  // Infinite scroll logic
-  // We repeat the text 8 times. 100% / 8 = 12.5%
-  const x = useTransform(baseX, (v) => `${v % 12.5}%`);
+  const handleMouseMove = (e) => {
+    const { left, top } = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - left);
+    mouseY.set(e.clientY - top);
+  };
 
-  const marqueeStyle = shouldReduceMotion ? undefined : { x, skewX };
-  const textAnimationProps = shouldReduceMotion
-    ? {}
-    : {
-        initial: { y: '100%' },
-        whileInView: { y: 0 },
-        transition: { duration: 0.8, ease: [0.33, 1, 0.68, 1] },
-        viewport: { once: true },
-      };
+  const scramble = () => {
+    let iteration = 0;
+    const interval = setInterval(() => {
+      setDisplayText(
+        text
+          .split('')
+          .map((letter, index) => {
+            if (text[index] === '\n') return '\n'; // Preserve newlines
+            if (index < iteration) {
+              return text[index];
+            }
+            return characters[Math.floor(Math.random() * characters.length)];
+          })
+          .join('')
+      );
 
-  useAnimationFrame((t, delta) => {
-    if (!isInView || shouldReduceMotion) return;
+      if (iteration >= text.length) {
+        clearInterval(interval);
+      }
 
-    let moveBy = -0.5 * (delta / 1000); // Base speed moving left
+      iteration += 1 / 3;
+    }, 30);
+  };
 
-    // Add scroll velocity effect
-    const velocity = velocityFactor.get();
-    if (velocity !== 0) {
-      moveBy += -Math.abs(velocity) * (delta / 1000);
+  useEffect(() => {
+    if (isInView) {
+      scramble();
     }
+  }, [isInView, text]);
 
-    baseX.set(baseX.get() + moveBy);
-  });
+  const parentVariants = {
+    initial: { scale: 1 },
+    hover: { 
+      scale: 1.02,
+      transition: { duration: 0.8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }
+    }
+  };
+
+  const childVariants = {
+    initial: { marginRight: '0em' },
+    hover: { 
+      marginRight: '0.1em',
+      transition: { duration: 1.5, ease: 'easeOut' }
+    }
+  };
 
   return (
-    <div ref={sectionRef} className='relative w-full overflow-hidden py-32'>
-      <motion.div style={marqueeStyle} className={`whitespace-nowrap flex w-max ${shouldReduceMotion ? '' : 'will-change-transform'}`}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.h2 key={i} {...textAnimationProps} className='text-[clamp(4rem,15vw,20rem)] font-bold uppercase leading-none tracking-tighter mr-12'>
-            {text}
-          </motion.h2>
-        ))}
+    <div className='w-full py-32 flex items-center justify-center overflow-hidden'>
+      <motion.div 
+        ref={ref}
+        className='relative group cursor-default w-full max-w-6xl mx-auto px-4'
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        onMouseMove={handleMouseMove}
+      >
+        <motion.h2 
+          className='text-[clamp(2rem,5.5vw,8rem)] font-black text-center tracking-tighter text-white whitespace-pre-line relative z-10'
+          variants={parentVariants}
+          initial="initial"
+          whileHover="hover"
+        >
+          {displayText.split('\n').map((line, lineIndex) => (
+            <div key={lineIndex} className="block whitespace-nowrap">
+              {line.split('').map((char, charIndex) => (
+                <motion.span key={`${lineIndex}-${charIndex}`} variants={childVariants} className="inline-block">
+                  {char === ' ' ? '\u00A0' : char}
+                </motion.span>
+              ))}
+            </div>
+          ))}
+        </motion.h2>
+        
+        {/* Mouse-following Spotlight Glow */}
+        <motion.div 
+          className='absolute top-0 left-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/2 -translate-y-1/2 mix-blend-screen'
+          style={{ x: glowX, y: glowY }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileHover={{ opacity: 0.6, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        />
       </motion.div>
     </div>
   );

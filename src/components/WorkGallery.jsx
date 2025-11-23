@@ -87,20 +87,20 @@ const WorkGallery = () => {
     {
       title: 'THREE.JS',
       category: '3D Experience',
-      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=60&w=1200&auto=format&fit=crop',
+      image: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=60&w=1200&auto=format&fit=crop',
       color: '#8b5cf6', // Violet
     },
     {
       title: 'REACT',
       category: 'Core Framework',
-      image: 'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=60&w=1200&auto=format&fit=crop',
-      color: '#3b82f6', // Blue
+      image: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=60&w=1200&auto=format&fit=crop',
+      color: '#8b5cf6', // Violet (Matches image)
     },
     {
       title: 'FRAMER',
       category: 'Animation Library',
       image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=60&w=1200&auto=format&fit=crop',
-      color: '#10b981', // Emerald
+      color: '#ec4899', // Pink
     },
     {
       title: 'TAILWIND',
