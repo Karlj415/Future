@@ -77,7 +77,6 @@ const Hero = () => {
         frameloop={isInView ? 'always' : 'never'} 
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ 
-          powerPreference: "high-performance",
           alpha: false,
           antialias: false,
           stencil: false,
