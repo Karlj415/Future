@@ -73,7 +73,18 @@ const Hero = () => {
 
   return (
     <div ref={ref} className='relative w-full h-screen bg-[#050505]'>
-      <Canvas frameloop={isInView ? 'always' : 'never'} camera={{ position: [0, 0, 5], fov: 45 }}>
+      <Canvas 
+        frameloop={isInView ? 'always' : 'never'} 
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        gl={{ 
+          preserveDrawingBuffer: true, 
+          powerPreference: "high-performance",
+          antialias: false,
+          stencil: false,
+          depth: true
+        }}
+        dpr={[1, 1.5]} // Limit pixel ratio to save resources
+      >
         <color attach='background' args={['#050505']} />
         <NoiseBackground />
         <ambientLight intensity={0.5} />
