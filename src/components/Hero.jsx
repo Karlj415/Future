@@ -32,15 +32,15 @@ const Sphere = () => {
         backsideThickness={0.5}
         thickness={2}
         chromaticAberration={0.5}
-        anisotropy={0.5}
+        anisotropy={0.1}
         distortion={0.5}
         distortionScale={0.5}
         temporalDistortion={0.2}
         iridescence={0.5}
         iridescenceIOR={1}
         iridescenceThicknessRange={[0, 1400]}
-        resolution={256} // Reduced from default
-        samples={4} // Reduced from default
+        resolution={128} // Reduced for stability
+        samples={2} // Reduced for stability
       />
     </mesh>
   );
@@ -77,13 +77,13 @@ const Hero = () => {
         frameloop={isInView ? 'always' : 'never'} 
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ 
-          preserveDrawingBuffer: true, 
           powerPreference: "high-performance",
+          alpha: false,
           antialias: false,
           stencil: false,
           depth: true
         }}
-        dpr={[1, 1.5]} // Limit pixel ratio to save resources
+        dpr={1} // Strict limit to 1x pixel ratio for stability
       >
         <color attach='background' args={['#050505']} />
         <NoiseBackground />
