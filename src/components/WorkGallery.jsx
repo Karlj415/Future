@@ -106,11 +106,10 @@ const ProjectItem = ({ title, category, image, index, color }) => {
       {/* Text */}
       <motion.div
         style={!isMobile ? { y: parallaxY } : undefined}
-        className="absolute z-20 pointer-events-none text-center mix-blend-difference"
+        className="absolute z-20 pointer-events-none text-center"
       >
         <h3
-          className="text-[clamp(2rem,8vw,6rem)] font-black leading-none tracking-tight"
-          style={{ textShadow: `0 0 30px ${color}` }}
+          className="text-[clamp(2rem,8vw,6rem)] font-black leading-none tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
         >
           {title}
         </h3>
