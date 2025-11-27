@@ -23,7 +23,13 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^(motion|[A-Z_])' }],
+      // Allow uppercase vars and 'motion' (used as JSX namespace)
+      'no-unused-vars': ['error', { 
+        varsIgnorePattern: '^[A-Z_]|^motion$',
+        argsIgnorePattern: '^_'
+      }],
+      // Allow setState in effects for initial setup patterns
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 ])

@@ -1,15 +1,41 @@
 @import "tailwindcss";
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #050505; /* Deep Void */
+  background-color: #050505;
   color: #ffffff;
   width: 100%;
   min-height: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix mobile viewport height issues */
+html {
+  height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 #root {
   width: 100%;
   min-height: 100%;
+}
+
+/* Touch action for better mobile scrolling */
+@media (pointer: coarse) {
+  body {
+    touch-action: pan-y;
+  }
 }
